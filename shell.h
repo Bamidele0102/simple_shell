@@ -101,7 +101,7 @@ typedef struct passinfo
 	0, 0, 0}
 
 /**
- * @struct BuiltinEntry - Represents an entry in the built-in commands table
+ * struct BuiltinEntry - Represents an entry in the built-in commands table
  * @type: The type of built-in command
  * @function: The function pointer to the built-in command handler
  */
@@ -123,5 +123,10 @@ int hsh(ShellContext *, char **);
 int find_builtin(ShellContext *);
 void find_cmd(ShellContext *);
 void fork_cmd(ShellContext *);
+
+/* custom_getline.c */
+ssize_t get_input(ShellContext *);
+void sigint_handler(int signo);
+int _getline(ShellContext *, char **, size_t *);
 
 
