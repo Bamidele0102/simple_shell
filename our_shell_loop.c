@@ -2,8 +2,7 @@
 
 /**
  * hsh - The original shell loop.
- * @info: This is the address of the ShellContext
- struct.
+ * @info: This is the address of the ShellContext struct.
  * @av: This is the arguments passed to the shell.
  *
  * Return: It returns 0 on success, 1 on error, or error code.
@@ -46,8 +45,7 @@ int hsh(ShellContext *info, char **av)
 
 /**
  * find_builtin - It locates a builtin function.
- * @info: This is the address of the ShellContext
- struct.
+ * @info: This is the address of the ShellContext struct.
  *
  * Return: -1 if the builtin is not found,
  *			0 if the builtin executed successfully,
@@ -85,8 +83,7 @@ int find_builtin(ShellContext *info)
 
 /**
  * find_cmd - This function locates a command in the path.
- * @info:This is the address of the ShellContext
- struct.
+ * @info:This is the address of the ShellContext struct.
  *
  * Return: Always returns void.
  */
@@ -136,8 +133,7 @@ void find_cmd(ShellContext *info)
 
 /**
  * fork_cmd - This function forks and exec thread to run cmd.
- * @info: This is the address of the ShellContext
- struct.
+ * @info: This is the address of the ShellContext struct.
  *
  * Return: Always returns void.
  */
