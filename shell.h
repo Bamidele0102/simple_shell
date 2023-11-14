@@ -118,3 +118,10 @@ int _eputchar(char);
 int _putfd(char c, int fd);
 int _putsfd(char *str, int fd);
 
+/* our_shell_loop.c */
+int hsh(ShellContext *, char **);
+int find_builtin(ShellContext *);
+void find_cmd(ShellContext *);
+void fork_cmd(ShellContext *);
+
+
