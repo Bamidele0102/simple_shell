@@ -111,3 +111,10 @@ typedef struct BuiltinEntry
 	int (*function)(ShellContext *);
 } BuiltinEntry;
 
+
+/* custom_errors.c */
+void _eputs(char *);
+int _eputchar(char);
+int _putfd(char c, int fd);
+int _putsfd(char *str, int fd);
+
