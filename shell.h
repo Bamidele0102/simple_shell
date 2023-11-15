@@ -136,4 +136,7 @@ int print_d(int, int);
 char *convert_number(long int, int, int);
 void remove_comments(char *);
 
-
+/* our_parser.c */
+int is_cmd(ShellContext *, char *);
+char *dup_chars(char *, int, int);
+char *find_path(ShellContext *, char *, char *);
