@@ -129,4 +129,9 @@ ssize_t get_input(ShellContext *);
 void sigint_handler(int signo);
 int _getline(ShellContext *, char **, size_t *);
 
-
+/* custom_errors1.c */
+int _erratoi(char *);
+void print_error(ShellContext *, char *);
+int print_d(int, int);
+char *convert_number(long int, int, int);
+void remove_comments(char *);
