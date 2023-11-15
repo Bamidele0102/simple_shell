@@ -20,7 +20,6 @@ char **get_environ(ShellContext *info)
 /**
  * _unsetenv - It deletes an environment variable.
  * @info: The info struct.
- *
  * @var: The var to be deleted.
  * Return: 1 on delete, 0 otherwise
  */
@@ -41,16 +40,18 @@ int _unsetenv(ShellContext *info, char *var)
 			info->env_changed = delete_node_at_index(&(info->env), i);
 			i = 0;
 			node = info->env;
+			return (1);  /* Variable successfully deleted*/
 		}
 	}
-	return (info->env_changed);
+
+	/* Variable not found */
+	fprintf(stderr, "unsetenv: %s: Environment variable not found\n", var);
+	return (0);
 }
 
 /**
  * _setenv - It sets an environment variable.
- *
  * @info: The info struct.
- *
  * @var: The var to be set.
  * @value: The value of the var.
  * Return: Always 0.
@@ -66,7 +67,10 @@ int _setenv(ShellContext *info, char *var, char *value)
 
 	buf = malloc(_strlen(var) + _strlen(value) + 2);
 	if (!buf)
-		return (1);
+	{
+		fprintf(stderr, "setenv: Memory allocation failed\n");
+		return (1);  /* Memory allocation failed*/
+	}
 
 	_strcpy(buf, var);
 	_strcat(buf, "=");
@@ -80,12 +84,12 @@ int _setenv(ShellContext *info, char *var, char *value)
 			free(node->str);
 			node->str = buf;
 			info->env_changed = 1;
-			return (0);
+			return (0);  /* Variable successfully set*/
 		}
 	}
+
 	add_node_end(&(info->env), buf, 0);
 	free(buf);
 	info->env_changed = 1;
 	return (0);
 }
-
