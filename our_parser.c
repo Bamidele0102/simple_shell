@@ -2,8 +2,7 @@
 
 /**
  * is_cmd - Checks if a file is a command.
- * @info: This is the address of the ShellContext
- struct.
+ * @info: This is the address of the ShellContext struct.
  * @path: This is the path to the file.
  *
  * Return: 1 if the file is a command, 0 otherwise.
@@ -54,8 +53,7 @@ char *dup_chars(char *pathstr, int start, int stop)
 
 /**
  * find_path - This function finds the full path of a command.
- * @info: This is the address of the ShellContext
- struct.
+ * @info: This is the address of the ShellContext struct.
  * @pathstr: The PATH string.
  * @cmd: The command to find.
  *
