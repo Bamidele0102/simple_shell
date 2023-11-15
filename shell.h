@@ -151,4 +151,11 @@ int is_delim(char c, const char *delim);
 int isalpha(int c);
 int atoi(const char *str);
 
+/* custom_variables.c */
+int is_chain(ShellContext *, char *, size_t *);
+void eval_chain(ShellContext *, char *, size_t *, size_t, size_t);
+int replace_alias(ShellContext *);
+int replace_vars(ShellContext *);
+int replace_string(char **, char *);
+
 #endif /* SHELL_H */
