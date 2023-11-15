@@ -184,5 +184,10 @@ char *_strncpy(char *, char *, int);
 char *_strncat(char *, char *, int);
 char *_strchr(char *, char);
 
+/* custom_getenv.c */
+char **get_environ(ShellContext *);
+int _unsetenv(ShellContext *, char *);
+int _setenv(ShellContext *, char *, char *);
+
 
 #endif /* SHELL_H */
