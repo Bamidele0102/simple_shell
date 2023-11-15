@@ -163,5 +163,12 @@ void clear_info(ShellContext *);
 void set_info(ShellContext *, char **);
 void free_info(ShellContext *, int);
 
+/* custom_environ.c */
+char *_getenv(ShellContext *, const char *);
+int _myenv(ShellContext *);
+int _mysetenv(ShellContext *);
+int _myunsetenv(ShellContext *);
+int populate_env_list(ShellContext *);
+
 
 #endif /* SHELL_H */
