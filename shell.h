@@ -179,5 +179,10 @@ int _myhelp(ShellContext *);
 int _myhistory(ShellContext *);
 int _myalias(ShellContext *);
 
+/* custom_exits.c */
+char *_strncpy(char *, char *, int);
+char *_strncat(char *, char *, int);
+char *_strchr(char *, char);
+
 
 #endif /* SHELL_H */
