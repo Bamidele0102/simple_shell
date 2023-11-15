@@ -189,5 +189,11 @@ char **get_environ(ShellContext *);
 int _unsetenv(ShellContext *, char *);
 int _setenv(ShellContext *, char *, char *);
 
+/* custom_history.c */
+char *get_history_file(ShellContext *info);
+int write_history(ShellContext *info);
+int read_history(ShellContext *info);
+int build_history_list(ShellContext *info, char *buf, int linecount);
+int renumber_history(ShellContext *info);
 
 #endif /* SHELL_H */
