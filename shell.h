@@ -175,5 +175,9 @@ int _myexit(ShellContext *);
 int _mycd(ShellContext *);
 int _myhelp(ShellContext *);
 
+/* custom_builtin1.c */
+int _myhistory(ShellContext *);
+int _myalias(ShellContext *);
+
 
 #endif /* SHELL_H */
