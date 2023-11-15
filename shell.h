@@ -203,6 +203,9 @@ size_t print_list_str(const list_t *);
 int delete_node_at_index(list_t **, unsigned int);
 void free_list(list_t **);
 
+/* loop_hsh.c */
+int loophsh(char **);
+
 /* custom_lists1.c */
 size_t list_len(const list_t *);
 char **list_to_strings(list_t *);
@@ -229,6 +232,5 @@ char *_strcpy(char *, char *);
 char *_strdup(const char *);
 void _puts(char *);
 int _putchar(char);
-
 
 #endif /* SHELL_H */
