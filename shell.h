@@ -221,7 +221,14 @@ int _strcmp(char *, char *);
 char *starts_with(const char *, const char *);
 char *_strcat(char *, char *);
 
-/* custom_memory.c */
+/* free_memory.c */
 int bfree(void **);
+
+/* custom_string1.c */
+char *_strcpy(char *, char *);
+char *_strdup(const char *);
+void _puts(char *);
+int _putchar(char);
+
 
 #endif /* SHELL_H */
