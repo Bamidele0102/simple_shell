@@ -150,3 +150,5 @@ int interactive(ShellContext *info);
 int is_delim(char c, const char *delim);
 int isalpha(int c);
 int atoi(const char *str);
+
+#endif /* SHELL_H */
