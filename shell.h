@@ -170,5 +170,10 @@ int _mysetenv(ShellContext *);
 int _myunsetenv(ShellContext *);
 int populate_env_list(ShellContext *);
 
+/* custom_builtin.c */
+int _myexit(ShellContext *);
+int _mycd(ShellContext *);
+int _myhelp(ShellContext *);
+
 
 #endif /* SHELL_H */
