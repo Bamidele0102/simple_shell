@@ -158,4 +158,10 @@ int replace_alias(ShellContext *);
 int replace_vars(ShellContext *);
 int replace_string(char **, char *);
 
+/* custom_getinfo.c */
+void clear_info(ShellContext *);
+void set_info(ShellContext *, char **);
+void free_info(ShellContext *, int);
+
+
 #endif /* SHELL_H */
