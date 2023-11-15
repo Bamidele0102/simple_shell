@@ -144,3 +144,9 @@ char *find_path(ShellContext *, char *, char *);
 /* custom_tokenizer.c */
 char **strtow(char *, char *);
 char **strtow2(char *, char);
+
+/* _atoi.c */
+int interactive(ShellContext *info);
+int is_delim(char c, const char *delim);
+int isalpha(int c);
+int atoi(const char *str);
