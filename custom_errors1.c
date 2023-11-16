@@ -96,32 +96,32 @@ int display_decimal(int number, int file_desc)
 
 /**
  * int_to_base - This converts a number to a string representation.
- * @num: For number.
+ * @numba: For numbaber.
  * @base: For base.
  * @flags: This is the argument flags.
  *
  * Return: ... string
  */
-char *int_to_base(long int num, int base, int flags)
+char *int_to_base(long int numba, int base, int flags)
 {
-	static char *array;
+	static char *char_set;
 	static char buffer[50];
 	char sign = 0;
 	char *ptr;
-	unsigned long n = num;
+	unsigned long n = numba;
 
-	if (!(flags & TO_UNSIGNED) && num < 0)
+	if (!(flags & TO_UNSIGNED) && numba < 0)
 	{
-		n = -num;
+		n = -numba;
 		sign = '-';
 	}
 
-	array = flags & TO_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	char_set = flags & TO_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
 	ptr = &buffer[49];
 	*ptr = '\0';
 
 	do {
-		*--ptr = array[n % base];
+		*--ptr = char_set[n % base];
 		n /= base;
 	} while (n != 0);
 
