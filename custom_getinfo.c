@@ -1,76 +1,76 @@
 #include "shell.h"
 
 /**
- * clear_info - This is used to initialize the ShellContext struct.
- * @info: It is the address of the ShellContext struct.
+ * clear_context - This is used to initialize the ShellContext struct.
+ * @context: It is the address of the ShellContext struct.
  */
-void clear_info(ShellContext *info)
+void clear_context(ShellContext *context)
 {
-	info->arg = NULL;
-	info->argv = NULL;
-	info->path = NULL;
-	info->argc = 0;
+	context->arg = NULL;
+	context->argv = NULL;
+	context->path = NULL;
+	context->argc = 0;
 }
 
 /**
- * set_info - This is used to initialize the ShellContext struct.
- * @info: It is the address of the ShellContext struct.
+ * set_context - This is used to initialize the ShellContext struct.
+ * @context: It is the address of the ShellContext struct.
  * @av: The command line arguments.
  */
-void set_info(ShellContext *info, char **av)
+void set_context(ShellContext *context, char **av)
 {
-	info->fileName = av[0];
+	context->fileName = av[0];
 
-	if (info->arg)
+	if (context->arg)
 	{
-		info->argv = strtow(info->arg, " \t");
-		if (info->argv == NULL)
+		context->argv = strtow(context->arg, " \t");
+		if (context->argv == NULL)
 		{
-			info->argv = malloc(sizeof(char *) * 2);
-			if (info->argv != NULL)
+			context->argv = malloc(sizeof(char *) * 2);
+			if (context->argv != NULL)
 			{
-				info->argv[0] = _strdup(info->arg);
-				info->argv[1] = NULL;
+				context->argv[0] = _strdup(context->arg);
+				context->argv[1] = NULL;
 			}
 		}
 
-		if (info->argv != NULL)
+		if (context->argv != NULL)
 		{
 			int i;
 
-			for (i = 0; info->argv[i]; i++)
+			for (i = 0; context->argv[i]; i++)
 				;
-			info->argc = i;
+			context->argc = i;
 
-			replace_alias(info);
-			replace_vars(info);
+			replace_alias(context);
+			replace_vars(context);
 		}
 	}
 }
 
 /**
- * free_info - Frees the memory allocated for the ShellContext struct fields.
- * @info: The address of the ShellContext struct.
+ * free_context - Frees the memory allocated for the ShellContext struct
+ * @context: The address of the ShellContext struct.
  * @all: If all is 1, it frees memory allocated for the ShellContext struct.
  */
-void free_info(ShellContext *info, int all)
+void free_context(ShellContext *context, int all)
 {
-	ffree(info->argv);
-	info->argv = NULL;
-	info->path = NULL;
+	ffree(context->argv);
+	context->argv = NULL;
+	context->path = NULL;
 
 	if (all)
 	{
-		if (!info->commandBuffer)
-			free(info->arg);
-		free_list(&(info->env));
-		free_list(&(info->history));
-		free_list(&(info->alias));
-		ffree(info->environ);
-		info->environ = NULL;
-		bfree((void **)info->commandBuffer);
-		if (info->input_fd > 2)
-			close(info->input_fd);
+		if (!context->commandBuffer)
+			free(context->arg);
+		free_list(&(context->env));
+		free_list(&(context->history));
+		free_list(&(context->alias));
+		ffree(context->environ);
+		context->environ = NULL;
+		deallocate((void **)context->commandBuffer);
+		if (context->input_fd > 2)
+			close(context->input_fd);
 		_putchar(BUFFER_FLUSH);
 	}
 }

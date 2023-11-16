@@ -1,12 +1,12 @@
 #include "shell.h"
 
 /**
- * bfree - Frees a pointer and NULLs the address.
+ * deallocate - Frees a pointer and NULLs the address.
  * @ptr: Address of the pointer to free.
  *
  * Return: 1 if freed, otherwise 0.
  */
-int bfree(void **ptr)
+int deallocate(void **ptr)
 {
 	/* Check if the pointer and its content exist */
 	if (ptr && *ptr)

@@ -2,57 +2,57 @@
 
 /**
  * hsh - The original shell loop.
- * @info: This is the address of the ShellContext struct.
+ * @context: This is the address of the ShellContext struct.
  * @av: This is the arguments passed to the shell.
  *
  * Return: It returns 0 on success, 1 on error, or error code.
  */
-int hsh(ShellContext *info, char **av)
+int hsh(ShellContext *context, char **av)
 {
 	ssize_t r = 0;
 	int builtin_ret = 0;
 
 	for (; r != -1 && builtin_ret != -2;)
 	{
-		clear_info(info);
-		if (interactive(info))
+		clear_context(context);
+		if (interactive(context))
 			_puts("$ ");
 		_eputchar(BUFFER_FLUSH);
-		r = get_input(info);
+		r = get_input(context);
 		if (r != -1)
 		{
-			set_info(info, av);
-			builtin_ret = find_builtin(info);
+			set_context(context, av);
+			builtin_ret = find_builtin(context);
 			if (builtin_ret == -1)
-				find_cmd(info);
+				find_cmd(context);
 		}
-		else if (interactive(info))
+		else if (interactive(context))
 			_putchar('\n');
-		free_info(info, 0);
+		free_context(context, 0);
 	}
-	write_history(info);
-	free_info(info, 1);
-	if (!interactive(info) && info->status)
-		exit(info->status);
+	write_history(context);
+	free_context(context, 1);
+	if (!interactive(context) && context->status)
+		exit(context->status);
 	if (builtin_ret == -2)
 	{
-		if (info->errorNumber == -1)
-			exit(info->status);
-		exit(info->errorNumber);
+		if (context->errorNumber == -1)
+			exit(context->status);
+		exit(context->errorNumber);
 	}
 	return (builtin_ret);
 }
 
 /**
  * find_builtin - It locates a builtin function.
- * @info: This is the address of the ShellContext struct.
+ * @context: This is the address of the ShellContext struct.
  *
  * Return: -1 if the builtin is not found,
  *			0 if the builtin executed successfully,
  *			1 if the builtin function is found, but failed, and
  *			-2 if the builtin signals exit().
  */
-int find_builtin(ShellContext *info)
+int find_builtin(ShellContext *context)
 {
 	int i = 0, builtinReturnValue = -1;
 	BuiltinEntry builtinTable[] = {
@@ -69,10 +69,10 @@ int find_builtin(ShellContext *info)
 
 	while (builtinTable[i].type)
 	{
-		if (_strcmp(info->argv[0], builtinTable[i].type) == 0)
+		if (_strcmp(context->argv[0], builtinTable[i].type) == 0)
 		{
-			info->lineCount++;
-			builtinReturnValue = builtinTable[i].function(info);
+			context->lineCount++;
+			builtinReturnValue = builtinTable[i].function(context);
 			break;
 		}
 		i++;
@@ -83,25 +83,25 @@ int find_builtin(ShellContext *info)
 
 /**
  * find_cmd - This function locates a command in the path.
- * @info:This is the address of the ShellContext struct.
+ * @context:This is the address of the ShellContext struct.
  *
  * Return: Always returns void.
  */
-void find_cmd(ShellContext *info)
+void find_cmd(ShellContext *context)
 {
 	char *path = NULL;
 	int i, k;
 
-	info->path = info->argv[0];
-	if (info->lineCountFlag == 1)
+	context->path = context->argv[0];
+	if (context->lineCountFlag == 1)
 	{
-		info->lineCount++;
-		info->lineCountFlag = 0;
+		context->lineCount++;
+		context->lineCountFlag = 0;
 	}
 	i = k = 0;
-	while (info->arg[i])
+	while (context->arg[i])
 	{
-		if (!is_delim(info->arg[i], " \t\n"))
+		if (!is_delim(context->arg[i], " \t\n"))
 		{
 			k++;
 		}
@@ -110,34 +110,34 @@ void find_cmd(ShellContext *info)
 	if (!k)
 		return;
 
-	path = find_path(info, _getenv(info, "PATH="), info->argv[0]);
+	path = find_path(context, _getenv(context, "PATH="), context->argv[0]);
 	if (path)
 	{
-		info->path = path;
-		fork_cmd(info);
+		context->path = path;
+		fork_cmd(context);
 	}
 	else
 	{
-		if ((interactive(info) || _getenv(info, "PATH=") ||
-					info->argv[0][0] == '/') && is_cmd(info, info->argv[0]))
+		if ((interactive(context) || _getenv(context, "PATH=") ||
+					context->argv[0][0] == '/') && is_cmd(context, context->argv[0]))
 		{
-			fork_cmd(info);
+			fork_cmd(context);
 		}
-		else if (*(info->arg) != '\n')
+		else if (*(context->arg) != '\n')
 		{
-			info->status = 127;
-			print_error(info, "not found\n");
+			context->status = 127;
+			display_error(context, "not found\n");
 		}
 	}
 }
 
 /**
  * fork_cmd - This function forks and exec thread to run cmd.
- * @info: This is the address of the ShellContext struct.
+ * @context: This is the address of the ShellContext struct.
  *
  * Return: Always returns void.
  */
-void fork_cmd(ShellContext *info)
+void fork_cmd(ShellContext *context)
 {
 	pid_t child_pid;
 
@@ -149,9 +149,9 @@ void fork_cmd(ShellContext *info)
 	}
 	if (child_pid == 0)
 	{
-		if (execve(info->path, info->argv, get_environ(info)) == -1)
+		if (execve(context->path, context->argv, get_environ(context)) == -1)
 		{
-			free_info(info, 1);
+			free_context(context, 1);
 			if (errno == EACCES)
 			{
 				exit(126);
@@ -161,13 +161,13 @@ void fork_cmd(ShellContext *info)
 	}
 	else
 	{
-		wait(&(info->status));
-		if (WIFEXITED(info->status))
+		wait(&(context->status));
+		if (WIFEXITED(context->status))
 		{
-			info->status = WEXITSTATUS(info->status);
-			if (info->status == 126)
+			context->status = WEXITSTATUS(context->status);
+			if (context->status == 126)
 			{
-				print_error(info, "Permission denied\n");
+				display_error(context, "Permission denied\n");
 			}
 		}
 	}

@@ -6,7 +6,7 @@
  *
  * Return: The size of the list.
  */
-size_t list_len(const list_t *h)
+size_t list_len(const list_node *h)
 {
 	size_t i = 0;
 
@@ -22,9 +22,9 @@ size_t list_len(const list_t *h)
  *
  * Return: This returns an array of strings.
  */
-char **list_to_strings(list_t *head)
+char **list_to_strings(list_node *head)
 {
-	list_t *node = head;
+	list_node *node = head;
 	size_t i = list_len(head), j;
 	char **strs;
 	char *str;
@@ -61,13 +61,13 @@ char **list_to_strings(list_t *head)
  *
  * Return: It returns the number of elements in the list.
  */
-size_t print_list(const list_t *h)
+size_t print_list(const list_node *h)
 {
 	size_t i = 0;
 
 	for (; h; h = h->next, i++)
 	{
-		_puts(convert_number(h->num, 10, 0));
+		_puts(int_to_base(h->num, 10, 0));
 		_putchar(':');
 		_putchar(' ');
 		_puts(h->str ? h->str : "(nil)");
@@ -85,7 +85,7 @@ size_t print_list(const list_t *h)
  *
  * Return: 1 if the node starts with the prefix.
  */
-list_t *node_starts_with(list_t *node, char *prefix, char c)
+list_node *node_starts_with(list_node *node, char *prefix, char c)
 {
 	char *p = NULL;
 
@@ -106,7 +106,7 @@ list_t *node_starts_with(list_t *node, char *prefix, char c)
  *
  * Return: It returns the index of the node, or -1 if the node is not found.
  */
-ssize_t get_node_index(list_t *head, list_t *node)
+ssize_t get_node_index(list_node *head, list_node *node)
 {
 	size_t i = 0;
 

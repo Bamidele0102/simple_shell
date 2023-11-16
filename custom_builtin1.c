@@ -2,64 +2,65 @@
 
 /**
  * _myhistory - This function displays the history list.
- * @info: The info struct.
+ * @context: The context struct.
  *
  * Description: This function displays the history list.
  *
  * Return: Always 0 on success, 1 on error.
  */
-int _myhistory(ShellContext *info)
+int _myhistory(ShellContext *context)
 {
-	print_list(info->history);
+	print_list(context->history);
 	return (0);
 }
 
 /**
  * unset_alias - This function removes an alias.
- * @info: The parameter info struct.
- * @str: This is the alias string.
+ * @context: The parameter context struct.
+ * @aliasString: This is the alias string to be removed.
  *
  * Description: This function removes an alias from the alias list.
  *
  * Return: Always 0 on success, 1 on error.
  */
-int unset_alias(ShellContext *info, char *str)
+int unset_alias(ShellContext *context, char *aliasString)
 {
 	char *p, c;
-	int ret;
+	int deletion_result;
 
-	p = _strchr(str, '=');
+	p = _strchr(aliasString, '=');
 	if (!p)
 		return (1);
 	c = *p;
 	*p = 0;
-	ret = delete_node_at_index(&(info->alias),
-			get_node_index(info->alias, node_starts_with(info->alias, str, -1)));
+	deletion_result = delete_node_at_index(&(context->alias),
+			get_node_index(context->alias,
+			node_starts_with(context->alias, aliasString, -1)));
 	*p = c;
-	return (ret);
+	return (deletion_result);
 }
 
 /**
  * set_alias - It sets or updates an alias.
- * @info: The parameter info struct.
- * @str: This is the alias string.
+ * @context: The parameter context struct.
+ * @aliasString: This is the alias string.
  *
  * Description: This function sets or updates an alias.
  *
  * Return: Always 0 on success, 1 on error.
  */
-int set_alias(ShellContext *info, char *str)
+int set_alias(ShellContext *context, char *aliasString)
 {
 	char *p;
 
-	p = _strchr(str, '=');
+	p = _strchr(aliasString, '=');
 	if (!p)
 		return (1);
 	if (!*++p)
-		return (unset_alias(info, str));
+		return (unset_alias(context, aliasString));
 
-	unset_alias(info, str);
-	return (add_node_end(&(info->alias), str, 0) == NULL);
+	unset_alias(context, aliasString);
+	return (add_node_end(&(context->alias), aliasString, 0) == NULL);
 }
 
 /**
@@ -70,7 +71,7 @@ int set_alias(ShellContext *info, char *str)
  *
  * Return: Always 0 on success, 1 on error.
  */
-int print_alias(list_t *node)
+int print_alias(list_node *node)
 {
 	char *p = NULL, *a = NULL;
 
@@ -89,33 +90,33 @@ int print_alias(list_t *node)
 
 /**
  * _myalias - It mimics the alias builtin.(man 1 alias)
- * @info: The struct info.
+ * @context: The struct context.
  *
  * Description: The function mimics the alias builtin by either display aliases
  * or setting/updating aliases based on the arguments provided.
  *
  * Return: Always 0 on success, 1 on error.
  */
-int _myalias(ShellContext *info)
+int _myalias(ShellContext *context)
 {
 	int i = 0;
 	char *p = NULL;
-	list_t *node = NULL;
+	list_node *node = NULL;
 
-	if (info->argc == 1)
+	if (context->argc == 1)
 	{
-		for (node = info->alias; node; node = node->next)
+		for (node = context->alias; node; node = node->next)
 			print_alias(node);
 		return (0);
 	}
 
-	for (i = 1; info->argv[i]; i++)
+	for (i = 1; context->argv[i]; i++)
 	{
-		p = _strchr(info->argv[i], '=');
+		p = _strchr(context->argv[i], '=');
 		if (p)
-			set_alias(info, info->argv[i]);
+			set_alias(context, context->argv[i]);
 		else
-			print_alias(node_starts_with(info->alias, info->argv[i], '='));
+			print_alias(node_starts_with(context->alias, context->argv[i], '='));
 	}
 
 	return (0);

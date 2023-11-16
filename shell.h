@@ -24,7 +24,7 @@
 #define LOGIC_AND_CMD	2
 #define CHAINING_CMD	3
 
-/* To convert_number() */
+/* To int_to_base() */
 #define TO_LOWERCASE 1
 #define TO_UNSIGNED 2
 
@@ -39,20 +39,20 @@ extern char **environ;
 
 
 /**
- * struct liststr - The list structure
+ * struct listStruct - The list structure
  * @num: The number of the node
  * @str: The string
  * @next: This is the next node in the list
  */
-typedef struct liststr
+typedef struct listStruct
 {
 	int num;
 	char *str;
-	struct liststr *next;
-} list_t;
+	struct listStruct *next;
+} list_node;
 
 /**
- *struct passinfo - This contains the info for the pass command
+ *struct passcontext - This contains the context for the pass command
  *		and allows uniform prototypes for function pointer struct
  *@arg: This is the string generated from getline containing arguements
  *@argv: This is an array of strings generated from arg
@@ -73,7 +73,7 @@ typedef struct liststr
  *@input_fd: The file descriptor from which to get line input
  *@historyCount: The history count
  */
-typedef struct passinfo
+typedef struct passcontext
 {
 	char *arg;
 	char **argv;
@@ -83,9 +83,9 @@ typedef struct passinfo
 	int errorNumber;
 	int lineCountFlag;
 	char *fileName;
-	list_t *env;
-	list_t *history;
-	list_t *alias;
+	list_node *env;
+	list_node *history;
+	list_node *alias;
 	char **environ;
 	int env_changed;
 	int status;
@@ -96,7 +96,7 @@ typedef struct passinfo
 	int historyCount;
 } ShellContext;
 
-#define INITIALIZE_INFO_STRUCT \
+#define INITIALIZE_context_STRUCT \
 {NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
 	0, 0, 0}
 
@@ -130,11 +130,11 @@ void sigint_handler(int signo);
 int _getline(ShellContext *, char **, size_t *);
 
 /* custom_errors1.c */
-int _erratoi(char *);
-void print_error(ShellContext *, char *);
-int print_d(int, int);
-char *convert_number(long int, int, int);
-void remove_comments(char *);
+int string_to_int(char *);
+void display_error(ShellContext *, char *);
+int display_decimal(int, int);
+char *int_to_base(long int, int, int);
+void delete_comments(char *);
 
 /* our_parser.c */
 int is_cmd(ShellContext *, char *);
@@ -146,7 +146,7 @@ char **strtow(char *, char *);
 char **strtow2(char *, char);
 
 /* _atoi.c */
-int interactive(ShellContext *info);
+int interactive(ShellContext *context);
 int is_delim(char c, const char *delim);
 int isalpha(int c);
 int atoi(const char *str);
@@ -158,10 +158,10 @@ int replace_alias(ShellContext *);
 int replace_vars(ShellContext *);
 int replace_string(char **, char *);
 
-/* custom_getinfo.c */
-void clear_info(ShellContext *);
-void set_info(ShellContext *, char **);
-void free_info(ShellContext *, int);
+/* custom_getcontext.c */
+void clear_context(ShellContext *);
+void set_context(ShellContext *, char **);
+void free_context(ShellContext *, int);
 
 /* custom_environ.c */
 char *_getenv(ShellContext *, const char *);
@@ -190,28 +190,28 @@ int _unsetenv(ShellContext *, char *);
 int _setenv(ShellContext *, char *, char *);
 
 /* custom_history.c */
-char *get_history_file(ShellContext *info);
-int write_history(ShellContext *info);
-int read_history(ShellContext *info);
-int build_history_list(ShellContext *info, char *buf, int linecount);
-int renumber_history(ShellContext *info);
+char *get_history_file(ShellContext *context);
+int write_history(ShellContext *context);
+int read_history(ShellContext *context);
+int build_history_list(ShellContext *context, char *buffs, int linecount);
+int renumber_history(ShellContext *context);
 
 /* custom_lists.c */
-list_t *add_node(list_t **, const char *, int);
-list_t *add_node_end(list_t **, const char *, int);
-size_t print_list_str(const list_t *);
-int delete_node_at_index(list_t **, unsigned int);
-void free_list(list_t **);
+list_node *add_node(list_node **, const char *, int);
+list_node *add_node_end(list_node **, const char *, int);
+size_t print_list_str(const list_node *);
+int delete_node_at_index(list_node **, unsigned int);
+void free_list(list_node **);
 
 /* loop_hsh.c */
 int loophsh(char **);
 
 /* custom_lists1.c */
-size_t list_len(const list_t *);
-char **list_to_strings(list_t *);
-size_t print_list(const list_t *);
-list_t *node_starts_with(list_t *, char *, char);
-ssize_t get_node_index(list_t *, list_t *);
+size_t list_len(const list_node *);
+char **list_to_strings(list_node *);
+size_t print_list(const list_node *);
+list_node *node_starts_with(list_node *, char *, char);
+ssize_t get_node_index(list_node *, list_node *);
 
 /* custom_realloc.c */
 char *_memset(char *, char, unsigned int);
@@ -225,7 +225,7 @@ char *starts_with(const char *, const char *);
 char *_strcat(char *, char *);
 
 /* free_memory.c */
-int bfree(void **);
+int deallocate(void **);
 
 /* custom_string1.c */
 char *_strcpy(char *, char *);

@@ -2,18 +2,18 @@
 
 /**
  * is_cmd - Checks if a file is a command.
- * @info: This is the address of the ShellContext struct.
+ * @context: This is the address of the ShellContext struct.
  * @path: This is the path to the file.
  *
  * Return: 1 if the file is a command, 0 otherwise.
  */
-int is_cmd(ShellContext *info, char *path)
+int is_cmd(ShellContext *context, char *path)
 {
 	struct stat st;
 
-	(void)info;
+	(void)context;
 
-	/* Check if the path is valid and obtain file information */
+	/* Check if the path is valid and obtain file contextrmation */
 	if (!path || stat(path, &st))
 		return (0);
 
@@ -35,31 +35,31 @@ int is_cmd(ShellContext *info, char *path)
  */
 char *dup_chars(char *pathstr, int start, int stop)
 {
-	static char buf[1024];
+	static char buffs[1024];
 	int i, k;
 
-	/* Copy characters from start to stop (excluding ':') into buf */
+	/* Copy characters from start to stop (excluding ':') into buffs */
 	for (k = 0, i = start; k < 1024 && i < stop; i++)
 	{
 		if (pathstr[i] != ':')
-			buf[k++] = pathstr[i];
+			buffs[k++] = pathstr[i];
 	}
 
 	/* Null-terminate the buffer */
-	buf[k] = '\0';
+	buffs[k] = '\0';
 
-	return (buf);
+	return (buffs);
 }
 
 /**
  * find_path - This function finds the full path of a command.
- * @info: This is the address of the ShellContext struct.
+ * @context: This is the address of the ShellContext struct.
  * @pathstr: The PATH string.
  * @cmd: The command to find.
  *
  * Return: Full path of cmd if found or NULL.
  */
-char *find_path(ShellContext *info, char *pathstr, char *cmd)
+char *find_path(ShellContext *context, char *pathstr, char *cmd)
 {
 	int curr_pos = 0;
 	int i;
@@ -67,7 +67,7 @@ char *find_path(ShellContext *info, char *pathstr, char *cmd)
 	/* Check for special case where cmd starts with "./" */
 	if ((_strlen(cmd) > 2) && starts_with(cmd, "./"))
 	{
-		if (is_cmd(info, cmd))
+		if (is_cmd(context, cmd))
 			return (cmd);
 	}
 
@@ -89,7 +89,7 @@ char *find_path(ShellContext *info, char *pathstr, char *cmd)
 			}
 
 			/* Check if the path is a valid command */
-			if (is_cmd(info, path))
+			if (is_cmd(context, path))
 				return (path);
 
 			/* Break if the end of pathstr is reached */

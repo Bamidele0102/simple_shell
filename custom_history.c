@@ -2,15 +2,15 @@
 
 /**
  * get_history_file - It gets the history file.
- * @info: This is the info struct.
+ * @context: This is the context struct.
  *
  * Return: The allocated string.
  */
-char *get_history_file(ShellContext *info)
+char *get_history_file(ShellContext *context)
 {
 	char *buf, *dir;
 
-	dir = _getenv(info, "HOME=");
+	dir = _getenv(context, "HOME=");
 	if (!dir)
 		return (NULL);
 
@@ -27,15 +27,15 @@ char *get_history_file(ShellContext *info)
 
 /**
  * write_history - It creates a file, or appends to an existing file
- * @info: This is the info struct.
+ * @context: This is the context struct.
  *
  * Return: 1 on success, -1 otherwise
  */
-int write_history(ShellContext *info)
+int write_history(ShellContext *context)
 {
 	ssize_t fd;
-	char *filename = get_history_file(info);
-	list_t *node = NULL;
+	char *filename = get_history_file(context);
+	list_node *node = NULL;
 
 	if (!filename)
 		return (-1);
@@ -46,7 +46,7 @@ int write_history(ShellContext *info)
 	if (fd == -1)
 		return (-1);
 
-	node = info->history;
+	node = context->history;
 	while (node)
 	{
 		_putsfd(node->str, fd);
@@ -63,17 +63,17 @@ int write_history(ShellContext *info)
  * read_history - It reads the history file
  * and builds the history list.
  *
- * @info: This is the info struct.
+ * @context: This is the context struct.
  *
  * Return: It returns history count on success,
  * 0 otherwise -1 on error
  */
-int read_history(ShellContext *info)
+int read_history(ShellContext *context)
 {
 	int i, last = 0, linecount = 0;
 	ssize_t fd, rdlen, fsize = 0;
 	struct stat st;
-	char *buf = NULL, *filename = get_history_file(info);
+	char *buf = NULL, *filename = get_history_file(context);
 
 	if (!filename)
 		return (0);
@@ -98,51 +98,51 @@ int read_history(ShellContext *info)
 		if (buf[i] == '\n')
 		{
 			buf[i] = 0;
-			build_history_list(info, buf + last, linecount++);
+			build_history_list(context, buf + last, linecount++);
 			last = i + 1;
 		}
 	if (last != i)
-		build_history_list(info, buf + last, linecount++);
+		build_history_list(context, buf + last, linecount++);
 	free(buf);
-	info->historyCount = linecount;
-	while (info->historyCount-- >= MAXIMUM_HISTORY)
-		delete_node_at_index(&(info->history), 0);
-	renumber_history(info);
-	return (info->historyCount);
+	context->historyCount = linecount;
+	while (context->historyCount-- >= MAXIMUM_HISTORY)
+		delete_node_at_index(&(context->history), 0);
+	renumber_history(context);
+	return (context->historyCount);
 }
 
 /**
  * build_history_list - This function builds the history list.
- * @info: This is the info struct.
+ * @context: This is the context struct.
  * @buf: The buffer to store the input.
  * @linecount: The line count of the history list.
  *
  * Return: Always 0
  */
-int build_history_list(ShellContext *info, char *buf, int linecount)
+int build_history_list(ShellContext *context, char *buf, int linecount)
 {
-	list_t *node = NULL;
+	list_node *node = NULL;
 
-	if (info->history)
-		node = info->history;
+	if (context->history)
+		node = context->history;
 
 	add_node_end(&node, buf, linecount);
 
-	if (!info->history)
-		info->history = node;
+	if (!context->history)
+		context->history = node;
 
 	return (0);
 }
 
 /**
  * renumber_history - This function renumbers the history list.
- * @info: This is the info struct.
+ * @context: This is the context struct.
  *
  * Return: The number of history list items.
  */
-int renumber_history(ShellContext *info)
+int renumber_history(ShellContext *context)
 {
-	list_t *node = info->history;
+	list_node *node = context->history;
 	int i;
 
 	for (i = 0; node; node = node->next)
@@ -150,6 +150,6 @@ int renumber_history(ShellContext *info)
 		node->num = i++;
 	}
 
-	return (info->historyCount = i);
+	return (context->historyCount = i);
 }
 

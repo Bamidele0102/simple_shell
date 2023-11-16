@@ -2,13 +2,13 @@
 
 /**
  * interactive - This will check if the shell is in interactive mode.
- * @info: The pointer to the ShellContext structure.
+ * @context: The pointer to the ShellContext structure.
  *
  * Return: Always 1 if in interactive mode, 0 otherwise.
  */
-int interactive(ShellContext *info)
+int interactive(ShellContext *context)
 {
-	return (isatty(STDIN_FILENO) && info->input_fd <= 2);
+	return (isatty(STDIN_FILENO) && context->input_fd <= 2);
 }
 
 /**

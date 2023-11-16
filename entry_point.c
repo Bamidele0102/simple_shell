@@ -9,7 +9,7 @@
  */
 int main(int ac, char **av)
 {
-	ShellContext info[] = {INITIALIZE_INFO_STRUCT
+	ShellContext context[] = {INITIALIZE_context_STRUCT
 	};
 	int fd = 2;
 
@@ -41,13 +41,13 @@ int main(int ac, char **av)
 			}
 			return (EXIT_FAILURE);
 		}
-		info->input_fd = fd;  /* Update input_fd in the ShellContext structure.*/
+		context->input_fd = fd;  /* Update input_fd in the ShellContext structure.*/
 	}
 	/* Populate environment list.*/
-	populate_env_list(info);
-	read_history(info);
+	populate_env_list(context);
+	read_history(context);
 	/* Start the shell.*/
-	hsh(info, av);
+	hsh(context, av);
 	return (EXIT_SUCCESS);
 }
 

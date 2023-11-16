@@ -1,27 +1,27 @@
 #include "shell.h"
 
 /**
- * _erratoi - This converts a string to an integer.
- * @s: The string to be converted.
+ * string_to_int - This converts a string to an integer.
+ * @str: The string to be converted.
  *
  * Return: On success, the integer value of the string.
  * On error, -1 is returned,
  *
  */
-int _erratoi(char *s)
+int string_to_int(char *str)
 {
 	int i = 0;
 	unsigned long int result = 0;
 
-	if (*s == '+')
-		s++;
+	if (*str == '+')
+		str++;
 
-	while (s[i] != '\0')
+	while (str[i] != '\0')
 	{
-		if (s[i] >= '0' && s[i] <= '9')
+		if (str[i] >= '0' && str[i] <= '9')
 		{
 			result *= 10;
-			result += (s[i] - '0');
+			result += (str[i] - '0');
 			if (result > INT_MAX)
 				return (-1);
 		}
@@ -35,52 +35,52 @@ int _erratoi(char *s)
 }
 
 /**
- * print_error - It displays the error message.
- * @info: This is the parameter & return info struct
- * @estr: The string error type
+ * display_error - It displays the error message.
+ * @context: This is the parameter & return context struct
+ * @error_type: The string error type
  * Return: void
  */
-void print_error(ShellContext *info, char *estr)
+void display_error(ShellContext *context, char *error_type)
 {
-	_eputs(info->fileName);
+	_eputs(context->fileName);
 	_eputs(": ");
-	print_d(info->lineCount, STDERR_FILENO);
+	display_decimal(context->lineCount, STDERR_FILENO);
 	_eputs(": ");
-	_eputs(info->argv[0]);
+	_eputs(context->argv[0]);
 	_eputs(": ");
-	_eputs(estr);
+	_eputs(error_type);
 }
 
 /**
- * print_d - This displays a decimal (integer), and number (base 10)
- * @input: The input to be displayed.
+ * display_decimal - This displays a decimal (integer), and number (base 10)
+ * @number: The number to be displayed.
  * @fd: This is the filedescriptor.
  *
  * Return: ... the number of characters displayed.
  */
-int print_d(int input, int fd)
+int display_decimal(int number, int fd)
 {
 	int (*__putchar)(char) = _putchar;
 	int i, count = 0;
-	unsigned int _abs_, current;
+	unsigned int abs_value, current;
 
 	if (fd == STDERR_FILENO)
 		__putchar = _eputchar;
 
-	if (input < 0)
+	if (number < 0)
 	{
-		_abs_ = -input;
+		abs_value = -number;
 		__putchar('-');
 		count++;
 	}
 	else
-		_abs_ = input;
+		abs_value = number;
 
-	current = _abs_;
+	current = abs_value;
 
 	for (i = 1000000000; i > 1; i /= 10)
 	{
-		if (_abs_ / i)
+		if (abs_value / i)
 		{
 			__putchar('0' + current / i);
 			count++;
@@ -95,14 +95,14 @@ int print_d(int input, int fd)
 }
 
 /**
- * convert_number - This is a clone of itoa for converting numbers.
+ * int_to_base - This converts a number to a string representation.
  * @num: For number.
  * @base: For base.
  * @flags: This is the argument flags.
  *
  * Return: ... string
  */
-char *convert_number(long int num, int base, int flags)
+char *int_to_base(long int num, int base, int flags)
 {
 	static char *array;
 	static char buffer[50];
@@ -132,20 +132,20 @@ char *convert_number(long int num, int base, int flags)
 }
 
 /**
- * remove_comments - It replaces first instance of '#' with '\0'
- * @buf: Modified string address.
+ * delete_comments - It replaces first instance of '#' with '\0'
+ * @buffs: Modified string address.
  *
  * Return: Always 0;
  */
-void remove_comments(char *buf)
+void delete_comments(char *buffs)
 {
 	int i = 0;
 
-	while (buf[i] != '\0')
+	while (buffs[i] != '\0')
 	{
-		if (buf[i] == '#' && (!i || buf[i - 1] == ' '))
+		if (buffs[i] == '#' && (!i || buffs[i - 1] == ' '))
 		{
-			buf[i] = '\0';
+			buffs[i] = '\0';
 			break;
 		}
 		i++;

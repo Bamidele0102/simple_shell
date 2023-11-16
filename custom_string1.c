@@ -83,16 +83,16 @@ void _puts(char *str)
 int _putchar(char c)
 {
 	static int i;
-	static char buf[WRITE_THEBUFF_SIZE];
+	static char buffs[WRITE_THEBUFF_SIZE];
 
 	if (c == BUFFER_FLUSH || i >= WRITE_THEBUFF_SIZE)
 	{
-		write(1, buf, i);
+		write(1, buffs, i);
 		i = 0;
 	}
 
 	if (c != BUFFER_FLUSH)
-		buf[i++] = c;
+		buffs[i++] = c;
 
 	return (1);
 }

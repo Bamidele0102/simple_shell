@@ -2,44 +2,44 @@
 
 /**
  * get_environ - Get the environment variables.
- * @info: The info struct.
+ * @context: The context struct.
  *
  * Return: Always 0
  */
-char **get_environ(ShellContext *info)
+char **get_environ(ShellContext *context)
 {
-	if (!info->environ || info->env_changed)
+	if (!context->environ || context->env_changed)
 	{
-		info->environ = list_to_strings(info->env);
-		info->env_changed = 0;
+		context->environ = list_to_strings(context->env);
+		context->env_changed = 0;
 	}
 
-	return (info->environ);
+	return (context->environ);
 }
 
 /**
  * _unsetenv - It deletes an environment variable.
- * @info: The info struct.
+ * @context: The context struct.
  * @var: The var to be deleted.
  * Return: 1 on delete, 0 otherwise
  */
-int _unsetenv(ShellContext *info, char *var)
+int _unsetenv(ShellContext *context, char *var)
 {
-	list_t *node = info->env;
-	size_t i = 0;
-	char *p;
+	list_node *curr_node = context->env;
+	size_t index = 0;
+	char *matchPointer;
 
-	if (!node || !var)
+	if (!curr_node || !var)
 		return (0);
 
-	for (; node; node = node->next, i++)
+	for (; curr_node; curr_node = curr_node->next, index++)
 	{
-		p = starts_with(node->str, var);
-		if (p && *p == '=')
+		matchPointer = starts_with(curr_node->str, var);
+		if (matchPointer && *matchPointer == '=')
 		{
-			info->env_changed = delete_node_at_index(&(info->env), i);
-			i = 0;
-			node = info->env;
+			context->env_changed = delete_node_at_index(&(context->env), index);
+			index = 0;
+			curr_node = context->env;
 			return (1);  /* Variable successfully deleted*/
 		}
 	}
@@ -51,45 +51,45 @@ int _unsetenv(ShellContext *info, char *var)
 
 /**
  * _setenv - It sets an environment variable.
- * @info: The info struct.
+ * @context: The context struct.
  * @var: The var to be set.
  * @value: The value of the var.
  * Return: Always 0.
  */
-int _setenv(ShellContext *info, char *var, char *value)
+int _setenv(ShellContext *context, char *var, char *value)
 {
-	char *buf = NULL;
-	list_t *node;
-	char *p;
+	char *newEnvVar = NULL;
+	list_node *curr_node;
+	char *matchPointer;
 
 	if (!var || !value)
 		return (0);
 
-	buf = malloc(_strlen(var) + _strlen(value) + 2);
-	if (!buf)
+	newEnvVar = malloc(_strlen(var) + _strlen(value) + 2);
+	if (!newEnvVar)
 	{
 		fprintf(stderr, "setenv: Memory allocation failed\n");
 		return (1);  /* Memory allocation failed*/
 	}
 
-	_strcpy(buf, var);
-	_strcat(buf, "=");
-	_strcat(buf, value);
+	_strcpy(newEnvVar, var);
+	_strcat(newEnvVar, "=");
+	_strcat(newEnvVar, value);
 
-	for (node = info->env; node; node = node->next)
+	for (curr_node = context->env; curr_node; curr_node = curr_node->next)
 	{
-		p = starts_with(node->str, var);
-		if (p && *p == '=')
+		matchPointer = starts_with(curr_node->str, var);
+		if (matchPointer && *matchPointer == '=')
 		{
-			free(node->str);
-			node->str = buf;
-			info->env_changed = 1;
+			free(curr_node->str);
+			curr_node->str = newEnvVar;
+			context->env_changed = 1;
 			return (0);  /* Variable successfully set*/
 		}
 	}
 
-	add_node_end(&(info->env), buf, 0);
-	free(buf);
-	info->env_changed = 1;
+	add_node_end(&(context->env), newEnvVar, 0);
+	free(newEnvVar);
+	context->env_changed = 1;
 	return (0);
 }
