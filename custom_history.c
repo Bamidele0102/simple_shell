@@ -33,29 +33,29 @@ char *get_history_file(ShellContext *context)
  */
 int write_history(ShellContext *context)
 {
-	ssize_t fd;
+	ssize_t file_desc;
 	char *filename = get_history_file(context);
 	list_node *node = NULL;
 
 	if (!filename)
 		return (-1);
 
-	fd = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
+	file_desc = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
 	free(filename);
 
-	if (fd == -1)
+	if (file_desc == -1)
 		return (-1);
 
 	node = context->history;
 	while (node)
 	{
-		_putsfd(node->str, fd);
-		_putfd('\n', fd);
+		_putsfd(node->str, file_desc);
+		_putfd('\n', file_desc);
 		node = node->next;
 	}
 
-	_putfd(BUFFER_FLUSH, fd);
-	close(fd);
+	_putfd(BUFFER_FLUSH, file_desc);
+	close(file_desc);
 	return (1);
 }
 
@@ -71,29 +71,29 @@ int write_history(ShellContext *context)
 int read_history(ShellContext *context)
 {
 	int i, last = 0, linecount = 0;
-	ssize_t fd, rdlen, fsize = 0;
+	ssize_t file_desc, rdlen, fsize = 0;
 	struct stat st;
 	char *buf = NULL, *filename = get_history_file(context);
 
 	if (!filename)
 		return (0);
 
-	fd = open(filename, O_RDONLY);
+	file_desc = open(filename, O_RDONLY);
 	free(filename);
-	if (fd == -1)
+	if (file_desc == -1)
 		return (0);
-	if (!fstat(fd, &st))
+	if (!fstat(file_desc, &st))
 		fsize = st.st_size;
 	if (fsize < 2)
 		return (0);
 	buf = malloc(sizeof(char) * (fsize + 1));
 	if (!buf)
 		return (0);
-	rdlen = read(fd, buf, fsize);
+	rdlen = read(file_desc, buf, fsize);
 	buf[fsize] = 0;
 	if (rdlen <= 0)
 		return (free(buf), 0);
-	close(fd);
+	close(file_desc);
 	for (i = 0; i < fsize; i++)
 		if (buf[i] == '\n')
 		{

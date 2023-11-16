@@ -45,18 +45,18 @@ int _eputchar(char c)
 /**
  * _putfd - This displays the character c to the file descriptor provided.
  * @c: The character to be displayed.
- * @fd: This is the file descriptor.
+ * @file_desc: This is the file descriptor.
  *
  * Return: On success 1. On error, -1 is returned, and errno is set correctly.
  */
-int _putfd(char c, int fd)
+int _putfd(char c, int file_desc)
 {
 	static int i;
 	static char buffs[WRITE_THEBUFF_SIZE];
 
 	if (c == BUFFER_FLUSH || i >= WRITE_THEBUFF_SIZE)
 	{
-		write(fd, buffs, i);
+		write(file_desc, buffs, i);
 		i = 0;
 	}
 
@@ -69,11 +69,11 @@ int _putfd(char c, int fd)
 /**
  * _putsfd - This displays an input string to the file descriptor provided.
  * @str: The string to be displayed.
- * @fd: This is the file descriptor.
+ * @file_desc: This is the file descriptor.
  *
  * Return: It returns the number of character written.
  */
-int _putsfd(char *str, int fd)
+int _putsfd(char *str, int file_desc)
 {
 	int i = 0;
 
@@ -82,7 +82,7 @@ int _putsfd(char *str, int fd)
 
 	for (; str[i] != '\0'; i++)
 	{
-		_putfd(str[i], fd);
+		_putfd(str[i], file_desc);
 	}
 
 	return (i);

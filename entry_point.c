@@ -11,21 +11,21 @@ int main(int ac, char **av)
 {
 	ShellContext context[] = {INITIALIZE_context_STRUCT
 	};
-	int fd = 2;
+	int file_desc = 2;
 
-	/* Inline assembly to modify the value of fd.*/
+	/* Inline assembly to modify the value of file_desc.*/
 	asm (
 			"mov %1, %0\n\t"
 			"add $3, %0"
-			: "=r" (fd)
-			: "r" (fd)
+			: "=r" (file_desc)
+			: "r" (file_desc)
 	    );
 
 	if (ac == 2)
 	{
 		/*Attempt to open the file provided as an argument*/
-		fd = open(av[1], O_RDONLY);
-		if (fd == -1)
+		file_desc = open(av[1], O_RDONLY);
+		if (file_desc == -1)
 		{
 			/* Handle file opening errors.*/
 			if (errno == EACCES)
@@ -41,7 +41,7 @@ int main(int ac, char **av)
 			}
 			return (EXIT_FAILURE);
 		}
-		context->input_fd = fd;  /* Update input_fd in the ShellContext structure.*/
+		context->input_fd = file_desc;  /* Update input_fd in the ShellContext.*/
 	}
 	/* Populate environment list.*/
 	populate_env_list(context);

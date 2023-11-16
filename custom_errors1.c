@@ -54,17 +54,17 @@ void display_error(ShellContext *context, char *error_type)
 /**
  * display_decimal - This displays a decimal (integer), and number (base 10)
  * @number: The number to be displayed.
- * @fd: This is the filedescriptor.
+ * @file_desc: This is the filedescriptor.
  *
  * Return: ... the number of characters displayed.
  */
-int display_decimal(int number, int fd)
+int display_decimal(int number, int file_desc)
 {
 	int (*__putchar)(char) = _putchar;
 	int i, count = 0;
 	unsigned int abs_value, current;
 
-	if (fd == STDERR_FILENO)
+	if (file_desc == STDERR_FILENO)
 		__putchar = _eputchar;
 
 	if (number < 0)

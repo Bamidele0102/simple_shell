@@ -115,8 +115,8 @@ typedef struct BuiltinEntry
 /* custom_errors.c */
 void _eputs(char *);
 int _eputchar(char);
-int _putfd(char c, int fd);
-int _putsfd(char *str, int fd);
+int _putfd(char c, int file_desc);
+int _putsfd(char *str, int file_desc);
 
 /* our_shell_loop.c */
 int hsh(ShellContext *, char **);
